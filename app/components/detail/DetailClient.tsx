@@ -22,7 +22,7 @@ export type CardProductProps = {
 };
 
 const DetailClient = ({ product }: { product: any }) => {
-    
+
     const {productCartQty, addToBasket, cartPrdcts} = UseCart();
     const [displayButton, setDisplayButton] = useState(false)
 
