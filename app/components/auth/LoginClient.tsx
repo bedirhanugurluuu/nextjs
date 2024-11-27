@@ -7,18 +7,47 @@ import Button from "../general/Button"
 import Heading from "../general/Heading"
 import Input from "../general/Input"
 import Link from "next/link";
+import { signIn } from "next-auth/react";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { User } from "@prisma/client";
+import { useEffect } from "react";
 
-const LoginClient = () => {
+interface LoginClientProps {
+  currentUser: User | null | undefined
+}
+
+const LoginClient:React.FC<LoginClientProps> = ({currentUser}) => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<FieldValues>()
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log(data)
+    signIn('credentials', {
+      ...data,
+      redirect: false
+    }).then((callback) => {
+      if (callback?.ok){
+        router.push('/cart')
+        router.refresh();
+        toast.success('Login İşlemi Başarılı')
+      }
+
+      if(callback?.error){
+        toast.error(callback.error)
+      }
+    })
   }
+
+  useEffect(() => {
+    if(currentUser){
+      router.push('/cart')
+      router.refresh();
+    }
+  }, [])
   return (
     <AuthContainer>
         <div className="w-full md:w-[500px] p-3 shadow-lg rounded-md">
@@ -28,7 +57,7 @@ const LoginClient = () => {
             <Button text="Giriş Yap" onClick={handleSubmit(onSubmit)} />
             <div className="text-center my-2 text-sm text-red-500">Daha Önce Kayıt Olmadıysa <Link className="underline" href="/register">buraya tıkla</Link> </div>
             <div className="text-center my-2 font-bold text-lg">OR</div>
-            <Button text="Google İle Giriş Yap" icon={FaGoogle} outline onClick={() => {}} />
+            <Button text="Google İle Giriş Yap" icon={FaGoogle} outline onClick={() => signIn('google')} />
         </div>
     </AuthContainer>
   )
