@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { IconType } from "react-icons"
 
 interface AdminSidebarItem {
@@ -6,9 +7,12 @@ interface AdminSidebarItem {
     icon: IconType,
     url: string
 }
-const AdminSidebarItem:React.FC<AdminSidebarItem> = ({admin}) => {
+const AdminSidebarItem:React.FC<AdminSidebarItem> = ({selected,name,icon:Icon,url}) => {
   return (
-    <div>AdminSidebarItem</div>
+    <Link className={`cursor-pointer flex items-center gap-2  ${selected ? "text-black font-bold" : "text-white font-medium"}`} href={url}>
+      <Icon size={"25"}/>
+      <div>{name}</div>
+    </Link>
   )
 }
 
