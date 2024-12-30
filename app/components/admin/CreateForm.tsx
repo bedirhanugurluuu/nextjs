@@ -80,7 +80,6 @@ const CreateForm = () => {
          try {
             const storage = getStorage(firebaseApp);
             const storageRef = ref(storage, 'images/shop.jpg');
-   
 
             const uploadTask = uploadBytesResumable(storageRef, img);
             await new Promise<void>((resolve, reject) => {
@@ -121,7 +120,7 @@ const CreateForm = () => {
       }
       await handleChange()
 
-      let newData = {...data, image: uploadedImg} 
+      let newData = {...data, image: uploadedImg}
 
       axios.post('/api/product', newData)
       .then(() => {
